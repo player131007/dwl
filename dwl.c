@@ -262,6 +262,7 @@ static void pinch_update(struct wl_listener *listener, void *data);
 static void pinch_end(struct wl_listener *listener, void *data);
 static void hold_begin(struct wl_listener *listener, void *data);
 static void hold_end(struct wl_listener *listener, void *data);
+// changes the tty
 static void chvt(const Arg *arg);
 static void checkidleinhibitor(struct wlr_surface *exclude);
 static void cleanup(void);
@@ -311,6 +312,7 @@ static int keybinding(uint32_t mods, xkb_keysym_t sym);
 static void keypress(struct wl_listener *listener, void *data);
 static void keypressmod(struct wl_listener *listener, void *data);
 static int keyrepeat(void *data);
+// closes the focused client
 static void killclient(const Arg *arg);
 static void locksession(struct wl_listener *listener, void *data);
 static void mapnotify(struct wl_listener *listener, void *data);
@@ -328,6 +330,7 @@ static void pointerfocus(Client *c, struct wlr_surface *surface,
 		double sx, double sy, uint32_t time);
 static void printstatus(void);
 static void powermgrsetmode(struct wl_listener *listener, void *data);
+// *gives up*
 static void quit(const Arg *arg);
 static void rendermon(struct wl_listener *listener, void *data);
 static void requestdecorationmode(struct wl_listener *listener, void *data);
@@ -346,15 +349,19 @@ static void setmon(Client *c, Monitor *m, uint32_t newtags);
 static void setpsel(struct wl_listener *listener, void *data);
 static void setsel(struct wl_listener *listener, void *data);
 static void setup(void);
+// self-explanatory
 static void spawn(const Arg *arg);
 static void startdrag(struct wl_listener *listener, void *data);
+// shows the focused window on certain tags (represented by a bitmask)
 static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglefloating(const Arg *arg);
 static void togglefullscreen(const Arg *arg);
 static void togglegaps(const Arg *arg);
+// tag but it toggles
 static void toggletag(const Arg *arg);
+// like view, but toggles
 static void toggleview(const Arg *arg);
 static void unlocksession(struct wl_listener *listener, void *data);
 static void unmaplayersurfacenotify(struct wl_listener *listener, void *data);
@@ -362,6 +369,8 @@ static void unmapnotify(struct wl_listener *listener, void *data);
 static void updatemons(struct wl_listener *listener, void *data);
 static void updatetitle(struct wl_listener *listener, void *data);
 static void urgent(struct wl_listener *listener, void *data);
+// views tags (represented by a bitmask)
+// toggles last view if 0
 static void view(const Arg *arg);
 static void virtualkeyboard(struct wl_listener *listener, void *data);
 static void virtualpointer(struct wl_listener *listener, void *data);
