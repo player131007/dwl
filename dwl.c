@@ -1,6 +1,7 @@
 /*
  * See LICENSE file for copyright and license details.
  */
+#include <fcntl.h>
 #include <getopt.h>
 #include <libinput.h>
 #include <linux/input-event-codes.h>
@@ -380,6 +381,7 @@ static void xytonode(double x, double y, struct wlr_surface **psurface,
 static void zoom(const Arg *arg);
 
 /* variables */
+static char *statusfile; // $XDG_RUNTIME_DIR/dwl.info
 static const char broken[] = "broken";
 static pid_t child_pid = -1;
 static int locked;
@@ -828,6 +830,8 @@ cleanup(void)
 		kill(-child_pid, SIGTERM);
 		waitpid(child_pid, NULL, 0);
 	}
+	remove(statusfile);
+	free(statusfile);
 	wlr_xcursor_manager_destroy(cursor_mgr);
 
 	destroykeyboardgroup(&kb_group->destroy, NULL);
@@ -2440,28 +2444,19 @@ run(char *startup_cmd)
 
 	/* Now that the socket exists and the backend is started, run the startup command */
 	if (startup_cmd) {
-		int piperw[2];
-		if (pipe(piperw) < 0)
-			die("startup: pipe:");
 		if ((child_pid = fork()) < 0)
 			die("startup: fork:");
 		if (child_pid == 0) {
+			int fd;
 			setsid();
-			dup2(piperw[0], STDIN_FILENO);
-			close(piperw[0]);
-			close(piperw[1]);
+			if((fd = open(statusfile, O_RDONLY)) == -1)
+				die("open:");
+			dup2(fd, STDIN_FILENO);
+			close(fd);
 			execl("/bin/sh", "/bin/sh", "-c", startup_cmd, NULL);
 			die("startup: execl:");
 		}
-		dup2(piperw[1], STDOUT_FILENO);
-		close(piperw[1]);
-		close(piperw[0]);
 	}
-
-	/* Mark stdout as non-blocking to avoid people who does not close stdin
-	 * nor consumes it in their startup script getting dwl frozen */
-	if (fd_set_nonblock(STDOUT_FILENO) < 0)
-		close(STDOUT_FILENO);
 
 	printstatus();
 
@@ -2643,6 +2638,8 @@ setsel(struct wl_listener *listener, void *data)
 void
 setup(void)
 {
+	int fd;
+	const char *runtime_dir = getenv("XDG_RUNTIME_DIR");
 	int i, sig[] = {SIGCHLD, SIGINT, SIGTERM, SIGPIPE};
 	struct sigaction sa = {.sa_flags = SA_RESTART, .sa_handler = handlesig};
 	sigemptyset(&sa.sa_mask);
@@ -2651,6 +2648,16 @@ setup(void)
 		sigaction(sig[i], &sa, NULL);
 
 	wlr_log_init(log_level, NULL);
+
+	statusfile = ecalloc(snprintf(NULL, 0, "%s/dwl.info", runtime_dir) + 1, sizeof(char));
+	sprintf(statusfile, "%s/dwl.info", runtime_dir);
+	if(mkfifo(statusfile, 0600))
+		die("mkfifo:");
+
+	if((fd = open(statusfile, O_RDWR | O_NONBLOCK)) == -1)
+		die("open:");
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
 
 	/* The Wayland display is managed by libwayland. It handles accepting
 	 * clients from the Unix socket, manging Wayland globals, and so on. */
