@@ -123,8 +123,8 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
 
-const char *termcmd[] = { "foot", NULL };
-const char *browsercmd[] = { "firefox", NULL };
+static const char *termcmd[] = { "foot", NULL };
+static const char *browsercmd[] = { "firefox", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
