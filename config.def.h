@@ -123,20 +123,20 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
 
-static const char *termcmd[] = { "foot", NULL };
-static const char *browsercmd[] = { "firefox", NULL };
-static const char *brightnessdowncmd[] = { "brightnessctl", "set", "-n", "15%-", NULL };
-static const char *brightnessupcmd[] = { "brightnessctl", "set", "-n", "15%+", NULL };
-static const char *micmutecmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle", NULL };
-static const char *mutecmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
-static const char* volumedowncmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%-", NULL };
-static const char* volumeupcmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%+", NULL };
+static const char *term_cmd[] = { "foot", NULL };
+static const char *browser_cmd[] = { "firefox", NULL };
+static const char *brightness_down_cmd[] = { "brightnessctl", "set", "-n", "15%-", NULL };
+static const char *brightness_up_cmd[] = { "brightnessctl", "set", "-n", "15%+", NULL };
+static const char *mic_mute_cmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle", NULL };
+static const char *mute_cmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
+static const char* volume_down_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%-", NULL };
+static const char* volume_up_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%+", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
 	/* modifier                  key                   function        argument */
-	{ MODKEY,                    XKB_KEY_q,            spawn,          {.v = termcmd} },
-	{ MODKEY,                    XKB_KEY_a,            spawn,          {.v = browsercmd} },
+	{ MODKEY,                    XKB_KEY_q,            spawn,          {.v = term_cmd} },
+	{ MODKEY,                    XKB_KEY_a,            spawn,          {.v = browser_cmd} },
 	{ MODKEY,                    XKB_KEY_j,            focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,            focusstack,     {.i = -1} },
 	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_j,            focusmon,       {.i = WLR_DIRECTION_LEFT} },
@@ -160,13 +160,13 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_0,            view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright,   tag,            {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_M,            quit,           {0} },
-	{ 0,                         XKB_KEY_XF86MonBrightnessDown, spawn, {.v = brightnessdowncmd} },
-	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightnessupcmd} },
-	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightnessupcmd} },
-	{ 0,                         XKB_KEY_XF86AudioMicMute,      spawn, {.v = micmutecmd} },
-	{ 0,                         XKB_KEY_XF86AudioMute,         spawn, {.v = mutecmd} },
-	{ 0,                         XKB_KEY_XF86AudioLowerVolume,  spawn, {.v = volumedowncmd} },
-	{ 0,                         XKB_KEY_XF86AudioRaiseVolume,  spawn, {.v = volumeupcmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessDown, spawn, {.v = brightness_down_cmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightness_up_cmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightness_up_cmd} },
+	{ 0,                         XKB_KEY_XF86AudioMicMute,      spawn, {.v = mic_mute_cmd} },
+	{ 0,                         XKB_KEY_XF86AudioMute,         spawn, {.v = mute_cmd} },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume,  spawn, {.v = volume_down_cmd} },
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume,  spawn, {.v = volume_up_cmd} },
 
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
