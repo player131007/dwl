@@ -125,6 +125,12 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 static const char *termcmd[] = { "foot", NULL };
 static const char *browsercmd[] = { "firefox", NULL };
+static const char *brightnessdowncmd[] = { "brightnessctl", "set", "-n", "15%-", NULL };
+static const char *brightnessupcmd[] = { "brightnessctl", "set", "-n", "15%+", NULL };
+static const char *micmutecmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle", NULL };
+static const char *mutecmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
+static const char* volumedowncmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%-", NULL };
+static const char* volumeupcmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%+", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
@@ -154,6 +160,13 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_0,            view,           {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_parenright,   tag,            {.ui = ~0} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_M,            quit,           {0} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessDown, spawn, {.v = brightnessdowncmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightnessupcmd} },
+	{ 0,                         XKB_KEY_XF86MonBrightnessUp,   spawn, {.v = brightnessupcmd} },
+	{ 0,                         XKB_KEY_XF86AudioMicMute,      spawn, {.v = micmutecmd} },
+	{ 0,                         XKB_KEY_XF86AudioMute,         spawn, {.v = mutecmd} },
+	{ 0,                         XKB_KEY_XF86AudioLowerVolume,  spawn, {.v = volumedowncmd} },
+	{ 0,                         XKB_KEY_XF86AudioRaiseVolume,  spawn, {.v = volumeupcmd} },
 
 	/* Ctrl-Alt-Fx is used to switch to another VT, if you don't know what a VT is
 	 * do not remove them.
