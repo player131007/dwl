@@ -381,7 +381,7 @@ static void xytonode(double x, double y, struct wlr_surface **psurface,
 static void zoom(const Arg *arg);
 
 /* variables */
-static char *statusfile; // $XDG_RUNTIME_DIR/dwl.info
+static char *statusfile;
 static const char broken[] = "broken";
 static pid_t child_pid = -1;
 static int locked;
@@ -2431,6 +2431,7 @@ resize(Client *c, struct wlr_box geo, int interact)
 void
 run(char *startup_cmd)
 {
+	char *c = strrchr(statusfile, '/');
 	/* Add a Unix socket to the Wayland display. */
 	const char *socket = wl_display_add_socket_auto(dpy);
 	if (!socket)
@@ -2438,6 +2439,9 @@ run(char *startup_cmd)
 	setenv("WAYLAND_DISPLAY", socket, 1);
 
 	setenv("XDG_CURRENT_DESKTOP", "dwl", 1);
+	*c = '\0';
+	setenv("DWL_RUNTIME", statusfile, 1);
+	*c = '/';
 
 	/* Start the backend. This will enumerate outputs and inputs, become the DRM
 	 * master, etc */
@@ -2641,7 +2645,6 @@ void
 setup(void)
 {
 	int fd;
-	const char *runtime_dir = getenv("XDG_RUNTIME_DIR");
 	int i, sig[] = {SIGCHLD, SIGINT, SIGTERM, SIGPIPE};
 	struct sigaction sa = {.sa_flags = SA_RESTART, .sa_handler = handlesig};
 	sigemptyset(&sa.sa_mask);
@@ -2651,8 +2654,12 @@ setup(void)
 
 	wlr_log_init(log_level, NULL);
 
-	statusfile = ecalloc(snprintf(NULL, 0, "%s/dwl.info", runtime_dir) + 1, sizeof(char));
-	sprintf(statusfile, "%s/dwl.info", runtime_dir);
+	statusfile = strf("%s/dwl/%jd/stdout", getenv("XDG_RUNTIME_DIR"), (intmax_t)getpid());
+	for(char *c = statusfile; *c; ++c) if(*c=='/') {
+		*c = '\0';
+		mkdir(statusfile, 0700);
+		*c = '/';
+	}
 	if(mkfifo(statusfile, 0600))
 		die("mkfifo:");
 

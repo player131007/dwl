@@ -49,3 +49,20 @@ fd_set_nonblock(int fd) {
 
 	return 0;
 }
+
+char *strf(const char *fmt, ...) {
+	va_list ap;
+	char *p;
+	int bufsz;
+
+	va_start(ap, fmt);
+	bufsz = vsnprintf(NULL, 0, fmt, ap) + 1;
+	va_end(ap);
+
+	va_start(ap, fmt);
+	p = ecalloc(bufsz, sizeof(*p));
+	vsnprintf(p, bufsz, fmt, ap);
+	va_end(ap);
+
+	return p;
+}
