@@ -831,6 +831,9 @@ cleanup(void)
 		waitpid(child_pid, NULL, 0);
 	}
 	remove(statusfile);
+	*strrchr(statusfile, '/') = '\0';
+	// remove pid directory
+	remove(statusfile);
 	free(statusfile);
 	wlr_xcursor_manager_destroy(cursor_mgr);
 
