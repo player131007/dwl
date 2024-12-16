@@ -2660,11 +2660,9 @@ setup(void)
 		mkdir(statusfile, 0700);
 		*c = '/';
 	}
-	if(mkfifo(statusfile, 0600))
-		die("mkfifo:");
 
-	if((fd = open(statusfile, O_RDWR | O_NONBLOCK)) == -1)
-		die("open:");
+	if((fd = open(statusfile, O_CREAT | O_EXCL | O_WRONLY | O_NONBLOCK, S_IRUSR | S_IWUSR)) == -1)
+		die("creat:");
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 
