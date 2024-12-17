@@ -2453,10 +2453,10 @@ run(char *startup_cmd)
 
 	/* Now that the socket exists and the backend is started, run the startup command */
 	if (startup_cmd) {
+		int fd;
 		if ((child_pid = fork()) < 0)
 			die("startup: fork:");
 		if (child_pid == 0) {
-			int fd;
 			setsid();
 			if((fd = open(statusfile, O_RDONLY)) == -1)
 				die("open:");
@@ -2464,6 +2464,11 @@ run(char *startup_cmd)
 			close(fd);
 			execl("/bin/sh", "/bin/sh", "-c", startup_cmd, NULL);
 			die("startup: execl:");
+		} else {
+			if((fd = open(statusfile, O_WRONLY | O_NONBLOCK)) == -1)
+				die("open:");
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
 		}
 	}
 
@@ -2664,9 +2669,8 @@ setup(void)
 		*c = '/';
 	}
 
-	if((fd = open(statusfile, O_CREAT | O_EXCL | O_WRONLY | O_NONBLOCK, S_IRUSR | S_IWUSR)) == -1)
-		die("creat:");
-	dup2(fd, STDOUT_FILENO);
+	if((fd = open(statusfile, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR)) == -1)
+		die("open:");
 	close(fd);
 
 	/* The Wayland display is managed by libwayland. It handles accepting
