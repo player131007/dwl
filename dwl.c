@@ -2442,7 +2442,6 @@ run(char *startup_cmd)
 		die("startup: display_add_socket_auto");
 	setenv("WAYLAND_DISPLAY", socket, 1);
 
-	setenv("XDG_CURRENT_DESKTOP", "dwl", 1);
 	*c = '\0';
 	setenv("DWL_RUNTIME", statusfile, 1);
 	*c = '/';
