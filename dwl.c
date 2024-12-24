@@ -2463,11 +2463,11 @@ run(char *startup_cmd)
 			dup2(old_stdout_fd, STDOUT_FILENO);
 			dup2(fd, STDIN_FILENO);
 			close(fd);
-			close(old_stdout_fd);
 			execl("/bin/sh", "/bin/sh", "-c", startup_cmd, NULL);
 			die("startup: execl:");
 		}
 	}
+	close(old_stdout_fd);
 
 	printstatus();
 
