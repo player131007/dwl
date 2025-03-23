@@ -31,6 +31,7 @@ static int log_level = WLR_ERROR;
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */
+	{ "clipse",           NULL,       0,            1,           -1 },
 	/* examples: */
 	{ "Gimp_EXAMPLE",     NULL,       0,            1,           -1 }, /* Start on currently visible tags floating, not tiled */
 	{ "firefox_EXAMPLE",  NULL,       1 << 8,       0,           -1 }, /* Start on ONLY tag "9" */
@@ -123,6 +124,7 @@ static const enum libinput_config_tap_button_map button_map = LIBINPUT_CONFIG_TA
 
 #define CHVT(n) { WLR_MODIFIER_CTRL|WLR_MODIFIER_ALT,XKB_KEY_XF86Switch_VT_##n, chvt, {.ui = (n)} }
 
+static const char *clipboard_cmd[] = { "foot", "-T", "clipse", "-a", "clipse", "clipse", NULL };
 static const char *term_cmd[] = { "foot", NULL };
 static const char *browser_cmd[] = { "firefox", NULL };
 static const char *brightness_down_cmd[] = { "brightnessctl", "set", "-n", "15%-", NULL };
@@ -137,6 +139,7 @@ static const Key keys[] = {
 	/* modifier                  key                   function        argument */
 	{ MODKEY,                    XKB_KEY_q,            spawn,          {.v = term_cmd} },
 	{ MODKEY,                    XKB_KEY_a,            spawn,          {.v = browser_cmd} },
+	{ MODKEY,                    XKB_KEY_v,            spawn,          {.v = clipboard_cmd} },
 	{ MODKEY,                    XKB_KEY_j,            focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,            focusstack,     {.i = -1} },
 	{ MODKEY|WLR_MODIFIER_ALT,   XKB_KEY_j,            focusmon,       {.i = WLR_DIRECTION_LEFT} },
