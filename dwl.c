@@ -2458,6 +2458,8 @@ run(char *startup_cmd)
 			die("startup: fork:");
 		if (child_pid == 0) {
 			setsid();
+			if((c = getenv("DWL_RUNTIME")) != NULL)
+				chdir(c);
 			if((fd = open(statusfile, O_RDONLY)) == -1)
 				die("open:");
 			dup2(old_stdout_fd, STDOUT_FILENO);
