@@ -129,8 +129,8 @@ static const char *brightness_down_cmd[] = { "brightnessctl", "set", "-n", "15%-
 static const char *brightness_up_cmd[] = { "brightnessctl", "set", "-n", "15%+", NULL };
 static const char *mic_mute_cmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SOURCE@", "toggle", NULL };
 static const char *mute_cmd[] = { "wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle", NULL };
-static const char* volume_down_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%-", NULL };
-static const char* volume_up_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%+", NULL };
+static const char *volume_down_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%-", NULL };
+static const char *volume_up_cmd[] = { "wpctl", "set-volume", "-l", "1.0", "@DEFAULT_AUDIO_SINK@", "2%+", NULL };
 
 static const Key keys[] = {
 	/* Note that Shift changes certain key codes: c -> C, 2 -> at, etc. */
